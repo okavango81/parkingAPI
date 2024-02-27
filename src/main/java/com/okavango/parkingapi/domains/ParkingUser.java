@@ -30,7 +30,7 @@ public class ParkingUser implements Serializable {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 25)
-    private Role role;
+    private Role role = Role.ROLE_CLIENT;
 
     private LocalDateTime creationDate;
     private LocalDateTime modificationDate;
@@ -40,6 +40,13 @@ public class ParkingUser implements Serializable {
     public enum Role{
         ROLE_ADMIN, ROLE_CLIENT
     }
+
+//    construtor para ParkingUserDTO
+    public ParkingUser(String username, String password){
+        this.username = username;
+        this.password = password;
+    }
+
 
     @Override
     public boolean equals(Object o) {
