@@ -3,6 +3,7 @@ package com.okavango.parkingapi.services;
 import com.okavango.parkingapi.domains.ParkingUser;
 import com.okavango.parkingapi.domains.dtos.ParkingUserDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingUserMinDTO;
+import com.okavango.parkingapi.domains.dtos.ParkingUserUpdatePasswordDTO;
 import com.okavango.parkingapi.repositories.ParkingUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -35,10 +36,17 @@ public class ParkingUserService {
     }
 
     @Transactional
-    public ResponseEntity<ParkingUserMinDTO> update(ParkingUserDTO user , Long id){
+    public ResponseEntity<Void> update(ParkingUserUpdatePasswordDTO user, Long id){
+
         ParkingUser u = parkingUserRepository.findById(id).map(ResponseEntity::ok).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).getBody();
-        u.setPassword(user.getPassword());
-        return ResponseEntity.ok(new ParkingUserMinDTO(u));
+        if (!user.getNewPassword().equals(user.getPasswordConfirmation())){
+            throw new RuntimeException("The new password must be the same as the confirmation password! ");
+        }if (!user.getCurrentPassword().equals(u.getPassword())){
+            throw new RuntimeException("Incorrect current password!");
+        }else {
+            u.setPassword(user.getNewPassword());
+            return ResponseEntity.noContent().build();
+        }
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +63,5 @@ public class ParkingUserService {
         parkingUserRepository.deleteById(id);
         return ResponseEntity.noContent().build();
     }
-
-
 
 }

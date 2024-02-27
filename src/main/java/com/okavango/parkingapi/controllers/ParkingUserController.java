@@ -3,7 +3,9 @@ package com.okavango.parkingapi.controllers;
 import com.okavango.parkingapi.domains.ParkingUser;
 import com.okavango.parkingapi.domains.dtos.ParkingUserDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingUserMinDTO;
+import com.okavango.parkingapi.domains.dtos.ParkingUserUpdatePasswordDTO;
 import com.okavango.parkingapi.services.ParkingUserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,7 +20,7 @@ public class ParkingUserController {
     private final ParkingUserService parkingUserService;
 
     @PostMapping
-    public ResponseEntity<ParkingUserMinDTO> newUser(@RequestBody ParkingUserDTO user){
+    public ResponseEntity<ParkingUserMinDTO> newUser(@Valid @RequestBody ParkingUserDTO user){
         return parkingUserService.registration(user);
     }
 
@@ -32,7 +34,7 @@ public class ParkingUserController {
         return parkingUserService.all();
     }
     @PatchMapping("/{id}")
-    public ResponseEntity<ParkingUserMinDTO> updatePassword(@RequestBody ParkingUserDTO user, @PathVariable Long id){
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody ParkingUserUpdatePasswordDTO user, @PathVariable Long id){
         return parkingUserService.update(user,id);
     }
 
