@@ -13,7 +13,7 @@ import lombok.Setter;
 public class ParkingUserDTO {
 
     @NotBlank
-    @Email(message = "Invalid email format!")
+    @Email(message = "Invalid email format!", regexp ="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{3,}$")
     private String username;
 
     @NotBlank
