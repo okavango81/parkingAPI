@@ -4,8 +4,8 @@ import com.okavango.parkingapi.domains.ParkingUser;
 import com.okavango.parkingapi.domains.dtos.ParkingUserDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingUserMinDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingUserUpdatePasswordDTO;
-import com.okavango.parkingapi.exceptions.NewPasswordDifferentFromPasswordConfirmation;
-import com.okavango.parkingapi.exceptions.PasswordProvidedDifferentFromRegisteredPassword;
+import com.okavango.parkingapi.exceptions.NewPasswordDifferentFromPasswordConfirmationException;
+import com.okavango.parkingapi.exceptions.PasswordProvidedDifferentFromRegisteredPasswordException;
 import com.okavango.parkingapi.repositories.ParkingUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,11 +44,11 @@ public class ParkingUserService {
 
         // se a nova senha for diferente da confirmacao de senha
         if (!user.getNewPassword().equals(user.getPasswordConfirmation())) {
-            throw new NewPasswordDifferentFromPasswordConfirmation();
+            throw new NewPasswordDifferentFromPasswordConfirmationException();
         }
         // se a senha atual fornecida for diferente da senha cadastrada no BD
         if (!user.getCurrentPassword().equals(u.get().getPassword())) {
-            throw new PasswordProvidedDifferentFromRegisteredPassword();
+            throw new PasswordProvidedDifferentFromRegisteredPasswordException();
 
         } else {
             u.get().setPassword(user.getNewPassword());
