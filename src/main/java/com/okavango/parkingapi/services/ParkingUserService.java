@@ -4,17 +4,17 @@ import com.okavango.parkingapi.domains.ParkingUser;
 import com.okavango.parkingapi.domains.dtos.ParkingUserDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingUserMinDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingUserUpdatePasswordDTO;
-import com.okavango.parkingapi.exceptions.DatabaseException;
+import com.okavango.parkingapi.exceptions.NewPasswordDifferentFromPasswordConfirmation;
+import com.okavango.parkingapi.exceptions.PasswordProvidedDifferentFromRegisteredPassword;
 import com.okavango.parkingapi.repositories.ParkingUserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,14 +26,7 @@ public class ParkingUserService {
     @Transactional
     public ResponseEntity<ParkingUserMinDTO> registration(ParkingUserDTO user) {
         ParkingUser u = new ParkingUser(user.getUsername(), user.getPassword());
-
-        try {
-            parkingUserRepository.save(u);
-
-        } catch (DataIntegrityViolationException ex) {
-            throw new DatabaseException(user.getUsername(), String.format("The username '%s' is already registered in the database", user.getUsername()));
-        }
-
+        parkingUserRepository.save(u);
         ParkingUserMinDTO newUser =  new ParkingUserMinDTO(u);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
@@ -41,21 +34,24 @@ public class ParkingUserService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<ParkingUserMinDTO> findId(Long id) {
-        ParkingUser u = parkingUserRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
-        return ResponseEntity.ok(new ParkingUserMinDTO(u));
+        Optional<ParkingUser> u = parkingUserRepository.findById(id);
+        return ResponseEntity.ok(new ParkingUserMinDTO(u.get()));
     }
 
     @Transactional
     public ResponseEntity<Void> update(ParkingUserUpdatePasswordDTO user, Long id) {
+        Optional<ParkingUser> u = parkingUserRepository.findById(id);
 
-        ParkingUser u = parkingUserRepository.findById(id).map(ResponseEntity::ok).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND)).getBody();
+        // se a nova senha for diferente da confirmacao de senha
         if (!user.getNewPassword().equals(user.getPasswordConfirmation())) {
-            throw new RuntimeException("The new password must be the same as the confirmation password! ");
+            throw new NewPasswordDifferentFromPasswordConfirmation();
         }
-        if (!user.getCurrentPassword().equals(u.getPassword())) {
-            throw new RuntimeException("Incorrect current password!");
+        // se a senha atual fornecida for diferente da senha cadastrada no BD
+        if (!user.getCurrentPassword().equals(u.get().getPassword())) {
+            throw new PasswordProvidedDifferentFromRegisteredPassword();
+
         } else {
-            u.setPassword(user.getNewPassword());
+            u.get().setPassword(user.getNewPassword());
             return ResponseEntity.noContent().build();
         }
     }
@@ -65,7 +61,8 @@ public class ParkingUserService {
         List<ParkingUserMinDTO> userDTOs = parkingUserRepository.findAll().stream()
                 .map(ParkingUserMinDTO::new) // Mapeia os objetos ParkingUser para DTOs
                 .collect(Collectors.toList()); // Coleta os DTOs em uma lista
-        return ResponseEntity.ok(userDTOs); // Retorna a lista encapsulada em um ResponseEntity
+
+        return ResponseEntity.ok(userDTOs);
     }
 
     @Transactional
