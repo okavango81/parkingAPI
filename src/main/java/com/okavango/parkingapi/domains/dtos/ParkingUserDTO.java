@@ -22,8 +22,4 @@ public class ParkingUserDTO {
     @Size(min = 6, max = 6, message = "Password length must be exactly 6 characters")
     private String password;
 
-    public ParkingUserDTO(String username){
-        this.username = username;
-    }
-
 }

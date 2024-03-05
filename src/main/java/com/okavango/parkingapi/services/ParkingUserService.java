@@ -31,7 +31,6 @@ public class ParkingUserService {
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 
-
     @Transactional(readOnly = true)
     public ResponseEntity<ParkingUserMinDTO> findId(Long id) {
         Optional<ParkingUser> u = parkingUserRepository.findById(id);
