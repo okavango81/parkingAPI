@@ -43,11 +43,11 @@ public class ParkingUserService {
 
         // se a nova senha for diferente da confirmacao de senha
         if (!user.getNewPassword().equals(user.getPasswordConfirmation())) {
-            throw new NewPasswordDifferentFromPasswordConfirmationException();
+            throw new NewPasswordDifferentFromPasswordConfirmationException("");
         }
         // se a senha atual fornecida for diferente da senha cadastrada no BD
         if (!user.getCurrentPassword().equals(u.get().getPassword())) {
-            throw new PasswordProvidedDifferentFromRegisteredPasswordException();
+            throw new PasswordProvidedDifferentFromRegisteredPasswordException("");
 
         } else {
             u.get().setPassword(user.getNewPassword());

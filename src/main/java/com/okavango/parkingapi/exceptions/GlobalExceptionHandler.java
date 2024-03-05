@@ -4,9 +4,6 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -22,26 +19,16 @@ import java.util.NoSuchElementException;
 public class GlobalExceptionHandler {
 
     //username ja cadastrado no BD
-    @ResponseStatus(HttpStatus.CONFLICT)
     @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionObject handlerDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
         String message = "This username is already registered in the database";
-        ExceptionObject exceptionObject = new ExceptionObject(request, LocalDateTime.now(), HttpStatus.CONFLICT.value(), message);
-        return exceptionObject;
-    }
-
-    //recurso nao encontrado
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    @ExceptionHandler(NoSuchElementException.class)
-    public ExceptionObject handlerNotFoundException(NoSuchElementException ex, HttpServletRequest request){
-        String message = "Resource Not Found";
-        ExceptionObject exceptionObject = new ExceptionObject(request,LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), message);
-        return exceptionObject;
+        return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.CONFLICT.value(), message);
     }
 
     //campos com formatacao incorreta
-    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     @ExceptionHandler(MethodArgumentNotValidException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
     public ExceptionObject handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request){
         String message = "Validation of the supplied argument(s) failed";
         List<String> errors =
@@ -49,26 +36,31 @@ public class GlobalExceptionHandler {
                         .map(error -> String.format("%s: %s", error.getField(), error.getDefaultMessage()))
                         .toList();
 
-        ExceptionObject exceptionObject = new ExceptionObject(request, LocalDateTime.now(), HttpStatus.UNPROCESSABLE_ENTITY.value(), message, errors);
-        return exceptionObject;
+        return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.UNPROCESSABLE_ENTITY.value(), message, errors);
+    }
+
+    //recurso nao encontrado
+    @ExceptionHandler(NoSuchElementException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionObject handlerNotFoundException(NoSuchElementException ex, HttpServletRequest request){
+        String message = "Resource Not Found";
+        return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), message);
     }
 
     //nova senha diferente da senha de confirmacao
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(NewPasswordDifferentFromPasswordConfirmationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionObject handlerNewPasswordDifferentFromPasswordConfirmation(RuntimeException ex, HttpServletRequest request){
         String message = "The new password must be the same as the confirmation password";
-        ExceptionObject exceptionObject = new ExceptionObject(request,LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
-        return exceptionObject;
+        return new ExceptionObject(request,LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
     }
 
     //senha fornecida diferente da senha cadastrada
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(PasswordProvidedDifferentFromRegisteredPasswordException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionObject handlerPasswordProvidedDifferentFromRegisteredPassword(RuntimeException ex, HttpServletRequest request){
         String message = "Incorrect current password";
-        ExceptionObject exceptionObject = new ExceptionObject(request,LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
-        return exceptionObject;
+        return new ExceptionObject(request,LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
     }
 
 }// fim da classe
