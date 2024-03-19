@@ -20,7 +20,7 @@ public class SwaggerNewUser {
             summary = "Register",
             description = "Registration parking user",
             responses = {
-                    @ApiResponse(responseCode = "201", description = "Resource created",
+                    @ApiResponse(responseCode = "201", description = "Resource created successfully",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ParkingUserMinDTO.class))
                     ),

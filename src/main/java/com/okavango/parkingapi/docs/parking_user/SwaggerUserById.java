@@ -17,11 +17,16 @@ public class SwaggerUserById {
     @Target(ElementType.METHOD)
     @Operation(summary = "Return by id", description = "Return parking user by id",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Return parking user defined by id",
+                    @ApiResponse(responseCode = "200", description = "Return of parking users defined by id",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ParkingUserMinDTO.class))
                     ),
-                    @ApiResponse(responseCode = "404", description = "Resource not found",
+                    @ApiResponse(responseCode = "404", description = "Resource not found / The URI does not contain a valid identifier",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExceptionObject.class))
+                    ),
+
+                    @ApiResponse(responseCode = "400", description = "Check the full URL as there may be typos",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ExceptionObject.class))
                     )

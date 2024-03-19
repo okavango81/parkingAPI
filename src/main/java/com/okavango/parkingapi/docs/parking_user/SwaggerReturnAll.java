@@ -16,7 +16,7 @@ public class SwaggerReturnAll {
     @Target(ElementType.METHOD)
     @Operation(summary = "Return All", description = "Return all parking users",
             responses = {
-                    @ApiResponse(responseCode = "200", description = "Return All",
+                    @ApiResponse(responseCode = "200", description = "Return of all registered parking users",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ParkingUserMinDTO.class))
                     )

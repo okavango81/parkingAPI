@@ -5,6 +5,7 @@ import com.okavango.parkingapi.domains.dtos.ParkingUserDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingUserMinDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingUserUpdatePasswordDTO;
 import com.okavango.parkingapi.services.ParkingUserService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;

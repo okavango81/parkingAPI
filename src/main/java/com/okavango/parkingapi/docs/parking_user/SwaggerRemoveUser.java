@@ -16,10 +16,7 @@ public class SwaggerRemoveUser {
     @Target(ElementType.METHOD)
     @Operation(summary = "Remove by id", description = "Remove parking user by id",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Remove parking user defined by id",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Void.class))
-                    ),
+                    @ApiResponse(responseCode = "204", description = "Parking user successfully removed"),
                     @ApiResponse(responseCode = "404", description = "Resource not found",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ExceptionObject.class))

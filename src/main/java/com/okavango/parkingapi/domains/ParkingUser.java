@@ -44,7 +44,7 @@ public class ParkingUser implements Serializable {
         ROLE_ADMIN, ROLE_CLIENT
     }
 
-//    construtor para ParkingUserDTO
+//  construtor para ParkingUserDTO
     public ParkingUser(String username, String password){
         this.username = username;
         this.password = password;

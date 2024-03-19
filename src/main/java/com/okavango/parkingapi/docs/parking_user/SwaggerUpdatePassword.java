@@ -16,10 +16,7 @@ public class SwaggerUpdatePassword {
     @Target(ElementType.METHOD)
     @Operation(summary = "Update password", description = "Update parking user password defined by id",
             responses = {
-                    @ApiResponse(responseCode = "204", description = "Update parking user password",
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Void.class))
-                    ),
+                    @ApiResponse(responseCode = "204", description = "Parking user password updated successfully"),
                     @ApiResponse(responseCode = "404", description = "Resource not found",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ExceptionObject.class))

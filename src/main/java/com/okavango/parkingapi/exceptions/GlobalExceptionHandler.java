@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.Getter;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,6 +27,17 @@ public class GlobalExceptionHandler {
     public ExceptionObject handlerDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
         String message = "This username is already registered in the database";
         return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.CONFLICT.value(), message);
+    }
+
+    @ExceptionHandler(NoResourceFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ExceptionObject handlerNoResourceFoundException(NoResourceFoundException ex, HttpServletRequest request){
+        String uri = request.getRequestURI();
+        Integer initial = uri.lastIndexOf("/");
+        String resourse = uri.substring(initial +1);
+
+        String message = "The URI does not contain a valid identifier";
+        return  new ExceptionObject(request, LocalDateTime.now(),HttpStatus.NOT_FOUND.value(), message);
     }
 
     //campos com formatacao incorreta
@@ -43,8 +57,20 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionObject handlerNotFoundException(NoSuchElementException ex, HttpServletRequest request){
-        String message = "Resource Not Found";
+
+        String uri = request.getRequestURI();
+        Integer initial = uri.lastIndexOf("/");
+        String resource = uri.substring(initial +1);
+
+        String message = "Resource " + resource +  " Not Found";
         return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), message);
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionObject handlerMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request){
+        String message = "Check the full URL as there may be typos";
+        return  new ExceptionObject(request, LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
     }
 
     //nova senha diferente da senha de confirmacao
