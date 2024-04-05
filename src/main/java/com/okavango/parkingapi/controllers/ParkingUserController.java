@@ -5,7 +5,6 @@ import com.okavango.parkingapi.domains.dtos.ParkingUserDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingUserMinDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingUserUpdatePasswordDTO;
 import com.okavango.parkingapi.services.ParkingUserService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,35 +22,35 @@ public class ParkingUserController {
     private final ParkingUserService parkingUserService;
 
 
-    @SwaggerNewUser.NewUser
+    @SwaggerParkingUser.NewUser
     @PostMapping
     public ResponseEntity<ParkingUserMinDTO> newUser(@Valid @RequestBody ParkingUserDTO user) {
         return parkingUserService.registration(user);
     }
 
 
-    @SwaggerUserById.UserById
+    @SwaggerParkingUser.UserById
     @GetMapping("/{id}")
     public ResponseEntity<ParkingUserMinDTO> userById(@PathVariable Long id) {
         return parkingUserService.findId(id);
     }
 
 
-    @SwaggerReturnAll.ReturnAll
+    @SwaggerParkingUser.ReturnAll
     @GetMapping
     public ResponseEntity<List<ParkingUserMinDTO>> returnAll() {
         return parkingUserService.all();
     }
 
 
-    @SwaggerUpdatePassword.UpdatePassword
+    @SwaggerParkingUser.UpdatePassword
     @PatchMapping("/{id}")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody ParkingUserUpdatePasswordDTO user, @PathVariable Long id) {
         return parkingUserService.update(user, id);
     }
 
 
-    @SwaggerRemoveUser.RemoveUser
+    @SwaggerParkingUser.RemoveUser
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeUser(@PathVariable Long id) {
         return parkingUserService.delete(id);
