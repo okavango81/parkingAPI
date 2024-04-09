@@ -10,6 +10,7 @@ import com.okavango.parkingapi.repositories.ParkingUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -22,10 +23,11 @@ import java.util.stream.Collectors;
 public class ParkingUserService {
 
     private final ParkingUserRepository parkingUserRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public ResponseEntity<ParkingUserMinDTO> registration(ParkingUserDTO user) {
-        ParkingUser u = new ParkingUser(user.getUsername(), user.getPassword());
+        ParkingUser u = new ParkingUser(user.getUsername(), passwordEncoder.encode(user.getPassword()));
         parkingUserRepository.save(u);
         ParkingUserMinDTO newUser =  new ParkingUserMinDTO(u);
         return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
@@ -51,11 +53,12 @@ public class ParkingUserService {
             throw new NewPasswordDifferentFromPasswordConfirmationException("");
         }
         // se a senha atual fornecida for diferente da senha cadastrada no BD
-        if (!user.getCurrentPassword().equals(u.get().getPassword())) {
+        //if (!user.getCurrentPassword().equals(u.get().getPassword())) {
+        if (!passwordEncoder.matches(user.getCurrentPassword(), u.get().getPassword())) {
             throw new PasswordProvidedDifferentFromRegisteredPasswordException("");
 
         } else {
-            u.get().setPassword(user.getNewPassword());
+            u.get().setPassword(passwordEncoder.encode(user.getNewPassword()));
             return ResponseEntity.noContent().build();
         }
     }

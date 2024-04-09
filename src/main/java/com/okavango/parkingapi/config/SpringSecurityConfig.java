@@ -1,5 +1,6 @@
 package com.okavango.parkingapi.config;
 
+import com.okavango.parkingapi.jwt.JWTAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -11,6 +12,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @EnableWebMvc
@@ -28,13 +30,20 @@ public class SpringSecurityConfig {
                 .authorizeHttpRequests(
                         auth -> auth.requestMatchers(HttpMethod.POST, "/api/v1/users")
                                 .permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/v1/auth")
+                                .permitAll()
                                 .anyRequest()
                                 .authenticated()
                 ).sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                ).addFilterBefore(
+                        jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
                 ).build();
     }
 
+  public JWTAuthorizationFilter jwtAuthorizationFilter(){
+        return new JWTAuthorizationFilter();
+  }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
