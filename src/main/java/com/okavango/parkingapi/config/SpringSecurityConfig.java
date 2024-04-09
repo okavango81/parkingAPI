@@ -33,8 +33,8 @@ public class SpringSecurityConfig {
                 ).sessionManagement(
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 ).build();
-
     }
+
 
     @Bean
     public PasswordEncoder passwordEncoder() {

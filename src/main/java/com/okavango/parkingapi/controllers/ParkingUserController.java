@@ -21,7 +21,6 @@ public class ParkingUserController {
 
     private final ParkingUserService parkingUserService;
 
-
     @SwaggerParkingUser.NewUser
     @PostMapping
     public ResponseEntity<ParkingUserMinDTO> newUser(@Valid @RequestBody ParkingUserDTO user) {
