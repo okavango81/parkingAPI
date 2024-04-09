@@ -37,6 +37,11 @@ public class ParkingUserService {
         return ResponseEntity.ok(new ParkingUserMinDTO(u.get()));
     }
 
+    @Transactional(readOnly = true)
+    public ParkingUser findUsername( String username) {
+        return  parkingUserRepository.findByUsername(username).get();
+    }
+
     @Transactional
     public ResponseEntity<Void> update(ParkingUserUpdatePasswordDTO user, Long id) {
         Optional<ParkingUser> u = parkingUserRepository.findById(id);
@@ -71,4 +76,9 @@ public class ParkingUserService {
         return ResponseEntity.noContent().build();
     }
 
+
+    @Transactional(readOnly = true)
+    public ParkingUser.Role roleByUsername(String username) {
+        return parkingUserRepository.findRoleByUsername(username);
+    }
 }
