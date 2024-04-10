@@ -1,13 +1,15 @@
 package com.okavango.parkingapi.domains;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedBy;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
@@ -19,6 +21,7 @@ import java.util.Objects;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
+@EntityListeners(AuditingEntityListener.class)
 public class ParkingUser implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,17 +38,24 @@ public class ParkingUser implements Serializable {
     @Column(nullable = false, length = 25)
     private Role role = Role.ROLE_CLIENT;
 
+    @CreatedDate
     private LocalDateTime creationDate;
+
+    @LastModifiedDate
     private LocalDateTime modificationDate;
+
+    @CreatedBy
     private String createdBy;
+
+    @LastModifiedBy
     private String modifiedBy;
 
-    public enum Role{
+    public enum Role {
         ROLE_ADMIN, ROLE_CLIENT
     }
 
-//  construtor para ParkingUserDTO
-    public ParkingUser(String username, String password){
+    //  construtor para ParkingUserDTO
+    public ParkingUser(String username, String password) {
         this.username = username;
         this.password = password;
     }
