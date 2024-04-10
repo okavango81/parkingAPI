@@ -2,6 +2,7 @@ package com.okavango.parkingapi.jwt;
 
 
 import com.okavango.parkingapi.domains.ParkingUser;
+import com.okavango.parkingapi.repositories.ParkingUserRepository;
 import com.okavango.parkingapi.services.ParkingUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;

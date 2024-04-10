@@ -1,12 +1,9 @@
 package com.okavango.parkingapi.exceptions;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.servlet.http.HttpServletRequest;
-import lombok.Getter;
-import org.aspectj.weaver.ast.Not;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -31,19 +28,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionObject handlerNoResourceFoundException(NoResourceFoundException ex, HttpServletRequest request){
+    public ExceptionObject handlerNoResourceFoundException(NoResourceFoundException ex, HttpServletRequest request) {
         String uri = request.getRequestURI();
         Integer initial = uri.lastIndexOf("/");
-        String resourse = uri.substring(initial +1);
+        String resourse = uri.substring(initial + 1);
 
         String message = "The URI does not contain a valid identifier";
-        return  new ExceptionObject(request, LocalDateTime.now(),HttpStatus.NOT_FOUND.value(), message);
+        return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), message);
     }
 
     //campos com formatacao incorreta
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
-    public ExceptionObject handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request){
+    public ExceptionObject handlerMethodArgumentNotValidException(MethodArgumentNotValidException ex, HttpServletRequest request) {
         String message = "Validation of the supplied argument(s) failed";
         List<String> errors =
                 ex.getBindingResult().getFieldErrors().stream()
@@ -56,37 +53,38 @@ public class GlobalExceptionHandler {
     //recurso nao encontrado
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ExceptionObject handlerNotFoundException(NoSuchElementException ex, HttpServletRequest request){
+    public ExceptionObject handlerNotFoundException(NoSuchElementException ex, HttpServletRequest request) {
 
         String uri = request.getRequestURI();
         Integer initial = uri.lastIndexOf("/");
-        String resource = uri.substring(initial +1);
+        String resource = uri.substring(initial + 1);
 
-        String message = "Resource " + resource +  " Not Found";
+        String message = "Resource " + resource + " Not Found";
         return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.NOT_FOUND.value(), message);
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionObject handlerMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request){
+    public ExceptionObject handlerMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
         String message = "Check the full URL as there may be typos";
-        return  new ExceptionObject(request, LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
+        return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
     }
 
     //nova senha diferente da senha de confirmacao
     @ExceptionHandler(NewPasswordDifferentFromPasswordConfirmationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionObject handlerNewPasswordDifferentFromPasswordConfirmation(RuntimeException ex, HttpServletRequest request){
+    public ExceptionObject handlerNewPasswordDifferentFromPasswordConfirmation(RuntimeException ex, HttpServletRequest request) {
         String message = "The new password must be the same as the confirmation password";
-        return new ExceptionObject(request,LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
+        return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
     }
 
     //senha fornecida diferente da senha cadastrada
     @ExceptionHandler(PasswordProvidedDifferentFromRegisteredPasswordException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionObject handlerPasswordProvidedDifferentFromRegisteredPassword(RuntimeException ex, HttpServletRequest request){
+    public ExceptionObject handlerPasswordProvidedDifferentFromRegisteredPassword(RuntimeException ex, HttpServletRequest request) {
         String message = "Incorrect current password";
-        return new ExceptionObject(request,LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
+        return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
     }
+
 
 }// fim da classe

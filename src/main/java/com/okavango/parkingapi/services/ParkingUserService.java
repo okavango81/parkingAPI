@@ -25,6 +25,7 @@ public class ParkingUserService {
     private final ParkingUserRepository parkingUserRepository;
     private final PasswordEncoder passwordEncoder;
 
+
     @Transactional
     public ResponseEntity<ParkingUserMinDTO> registration(ParkingUserDTO user) {
         ParkingUser u = new ParkingUser(user.getUsername(), passwordEncoder.encode(user.getPassword()));
@@ -40,8 +41,8 @@ public class ParkingUserService {
     }
 
     @Transactional(readOnly = true)
-    public ParkingUser findUsername( String username) {
-        return  parkingUserRepository.findByUsername(username).get();
+    public ParkingUser findUsername(String username) {
+        return  parkingUserRepository.findByUsername(username);
     }
 
     @Transactional
@@ -65,11 +66,7 @@ public class ParkingUserService {
 
     @Transactional(readOnly = true)
     public ResponseEntity<List<ParkingUserMinDTO>> all() {
-        List<ParkingUserMinDTO> userDTOs = parkingUserRepository.findAll().stream()
-                .map(ParkingUserMinDTO::new) // Mapeia os objetos ParkingUser para DTOs
-                .collect(Collectors.toList()); // Coleta os DTOs em uma lista
-
-        return ResponseEntity.ok(userDTOs);
+        return ResponseEntity.ok(parkingUserRepository.findAll().stream().map(ParkingUserMinDTO::new).collect(Collectors.toList()));
     }
 
     @Transactional

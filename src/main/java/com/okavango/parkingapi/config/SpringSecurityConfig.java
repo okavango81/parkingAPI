@@ -41,9 +41,11 @@ public class SpringSecurityConfig {
                 ).build();
     }
 
-  public JWTAuthorizationFilter jwtAuthorizationFilter(){
+    @Bean
+    public JWTAuthorizationFilter jwtAuthorizationFilter() {
+
         return new JWTAuthorizationFilter();
-  }
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
