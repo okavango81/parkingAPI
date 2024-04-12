@@ -1,5 +1,6 @@
 package com.okavango.parkingapi.config;
 
+import com.okavango.parkingapi.jwt.JWTAuthenticationEntryPoint;
 import com.okavango.parkingapi.jwt.JWTAuthorizationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -38,6 +39,8 @@ public class SpringSecurityConfig {
                         session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 ).addFilterBefore(
                         jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class
+                ).exceptionHandling(
+                        ex -> ex.authenticationEntryPoint(new JWTAuthenticationEntryPoint())
                 ).build();
     }
 

@@ -3,6 +3,7 @@ package com.okavango.parkingapi.exceptions;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.InsufficientAuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -10,7 +11,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -84,6 +84,14 @@ public class GlobalExceptionHandler {
     public ExceptionObject handlerPasswordProvidedDifferentFromRegisteredPassword(RuntimeException ex, HttpServletRequest request) {
         String message = "Incorrect current password";
         return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.BAD_REQUEST.value(), message);
+    }
+
+    //access denied
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ExceptionObject handlerAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
+        String message = "Access Denied Exception";
+        return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.FORBIDDEN.value(), message);
     }
 
 
