@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,6 +31,7 @@ public class ParkingUserController {
 
     @SwaggerParkingUser.UserById
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') OR (hasRole('CLIENT') AND #id == authentication.principal.id)")
     public ResponseEntity<ParkingUserMinDTO> userById(@PathVariable Long id) {
         return parkingUserService.findId(id);
     }
@@ -44,6 +46,7 @@ public class ParkingUserController {
 
     @SwaggerParkingUser.UpdatePassword
     @PatchMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN','CLIENT') AND (#id == authentication.principal.id)")
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody ParkingUserUpdatePasswordDTO user, @PathVariable Long id) {
         return parkingUserService.update(user, id);
     }

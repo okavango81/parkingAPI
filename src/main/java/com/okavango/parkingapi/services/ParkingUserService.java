@@ -36,7 +36,7 @@ public class ParkingUserService {
     }
 
     @Transactional(readOnly = true)
-    @PreAuthorize("hasRole('ADMIN') OR (hasRole('CLIENT') AND #id == authentication.principal.id)")
+    //@PreAuthorize("hasRole('ADMIN') OR (hasRole('CLIENT') AND #id == authentication.principal.id)")
     public ResponseEntity<ParkingUserMinDTO> findId(Long id) {
         Optional<ParkingUser> u = parkingUserRepository.findById(id);
         return ResponseEntity.ok(new ParkingUserMinDTO(u.get()));
