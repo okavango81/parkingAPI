@@ -39,6 +39,7 @@ public class ParkingUserController {
 
     @SwaggerParkingUser.ReturnAll
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<ParkingUserMinDTO>> returnAll() {
         return parkingUserService.all();
     }
