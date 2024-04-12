@@ -6,6 +6,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -52,10 +53,16 @@ public class SwaggerParkingUser {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     @Operation(summary = "Return All", description = "Return all parking users",
+            security = @SecurityRequirement(name = "security"),
             responses = {
+                    @ApiResponse(responseCode = "401", description = "User unauthorized"),
                     @ApiResponse(responseCode = "200", description = "Return of all registered parking users",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ParkingUserMinDTO.class))
+                    ),
+                    @ApiResponse(responseCode = "403", description = "User have be not permission to access this resource",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExceptionObject.class))
                     )
             }
     )
@@ -64,6 +71,7 @@ public class SwaggerParkingUser {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     @Operation(summary = "Update password", description = "Update parking user password defined by id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "204", description = "Parking user password updated successfully"),
                     @ApiResponse(responseCode = "404", description = "Resource not found",
@@ -77,6 +85,10 @@ public class SwaggerParkingUser {
                     @ApiResponse(responseCode = "422", description = "Validation of the supplied argument(s) failed",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ExceptionObject.class))
+                    ),
+                    @ApiResponse(responseCode = "403", description = "User have be not permission to access this resource",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExceptionObject.class))
                     )
             }
     )
@@ -85,7 +97,9 @@ public class SwaggerParkingUser {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     @Operation(summary = "Return by id", description = "Return parking user by id",
+            security = @SecurityRequirement(name = "security"),
             responses = {
+                    @ApiResponse(responseCode = "401", description = "User unauthorized"),
                     @ApiResponse(responseCode = "200", description = "Return of parking users defined by id",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ParkingUserMinDTO.class))
@@ -96,6 +110,10 @@ public class SwaggerParkingUser {
                     ),
 
                     @ApiResponse(responseCode = "400", description = "Check the full URL as there may be typos",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema(implementation = ExceptionObject.class))
+                    ),
+                    @ApiResponse(responseCode = "403", description = "User have be not permission to access this resource",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ExceptionObject.class))
                     )

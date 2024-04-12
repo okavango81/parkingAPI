@@ -9,6 +9,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.time.LocalDateTime;
@@ -92,6 +93,13 @@ public class GlobalExceptionHandler {
     public ExceptionObject handlerAccessDeniedException(AccessDeniedException ex, HttpServletRequest request) {
         String message = "Access Denied Exception";
         return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.FORBIDDEN.value(), message);
+    }
+
+    @ExceptionHandler(HttpClientErrorException.Unauthorized.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ExceptionObject handlerUnauthorized(HttpClientErrorException.Unauthorized ex , HttpServletRequest request){
+        String message = "User have be authenticated to access this resource";
+        return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.UNAUTHORIZED.value(), message);
     }
 
 
