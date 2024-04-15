@@ -11,32 +11,31 @@ import org.springframework.data.annotation.LastModifiedBy;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
+@Table(name = "clients")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
-@EntityListeners(AuditingEntityListener.class)
-public class ParkingUser implements Serializable {
+public class ParkingClient {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(nullable = false, unique = true, length = 100)
-    private String username;
+    @Column(nullable = false, length = 100)
+    private String name;
 
-    @Column(nullable = false, length = 200)
-    private String password;
+    @Column(nullable = false, unique = true, length = 11)
+    private String cpf;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 25)
-    private Role role = Role.ROLE_CLIENT;
+    @OneToOne
+    @JoinColumn(name = "id_parking_user", nullable = false)
+    private ParkingUser parkingUser;
 
     @CreatedDate
     private LocalDateTime creationDate;
@@ -51,42 +50,16 @@ public class ParkingUser implements Serializable {
     private String modifiedBy;
 
 
-
-    public enum Role {
-        ROLE_ADMIN, ROLE_CLIENT
-    }
-
-    //  construtor para ParkingUserDTO
-    public ParkingUser(String username, String password) {
-        this.username = username;
-        this.password = password;
-    }
-
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ParkingUser that = (ParkingUser) o;
+        ParkingClient that = (ParkingClient) o;
         return Objects.equals(id, that.id);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "ParkingUser{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                ", creationDate=" + creationDate +
-                ", modificationDate=" + modificationDate +
-                ", createdBy='" + createdBy + '\'' +
-                ", modifiedBy='" + modifiedBy + '\'' +
-                '}';
     }
 }
