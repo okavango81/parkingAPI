@@ -1,8 +1,10 @@
 package com.okavango.parkingapi.controllers;
 
+import com.okavango.parkingapi.docs.parking_user.SwaggerAuthentication;
 import com.okavango.parkingapi.domains.dtos.ParkingUserLoginDTO;
 import com.okavango.parkingapi.jwt.JWTUserDetailService;
 import com.okavango.parkingapi.jwt.JWToken;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
+@Tag(name = "Authentication", description = "Resource to authentication on API")
 public class AuthenticationController {
 
     private final JWTUserDetailService detailService;
@@ -28,6 +31,7 @@ public class AuthenticationController {
 
 
     @PostMapping("/auth")
+    @SwaggerAuthentication.Authenticate
     public ResponseEntity<?> authenticate(@RequestBody @Valid ParkingUserLoginDTO parkingUserLoginDTO, HttpServletRequest request) {
         log.info("Authentication process {}", parkingUserLoginDTO.getUsername());
 
