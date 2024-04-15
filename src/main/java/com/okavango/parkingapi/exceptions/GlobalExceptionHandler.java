@@ -19,14 +19,15 @@ import java.util.NoSuchElementException;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    //username ja cadastrado no BD
+    //username/cpf ja cadastrado no BD
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionObject handlerDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
-        String message = "This username is already registered in the database";
+        String message = "This username/cpf is already registered in the database";
         return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.CONFLICT.value(), message);
     }
 
+    // recurso nao encontrado
     @ExceptionHandler(NoResourceFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ExceptionObject handlerNoResourceFoundException(NoResourceFoundException ex, HttpServletRequest request) {

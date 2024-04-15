@@ -30,11 +30,11 @@ public class ParkingClient {
     @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(nullable = false, unique = true, length = 11)
+    @Column(nullable = false, unique = true, length = 14)
     private String cpf;
 
     @OneToOne
-    @JoinColumn(name = "id_parking_user", nullable = false)
+    @JoinColumn(name = "id_parking_user")
     private ParkingUser parkingUser;
 
     @CreatedDate
@@ -48,6 +48,11 @@ public class ParkingClient {
 
     @LastModifiedBy
     private String modifiedBy;
+
+    public ParkingClient(String name, String cpf){
+        this.name = name;
+        this.cpf = cpf;
+    }
 
 
     @Override
