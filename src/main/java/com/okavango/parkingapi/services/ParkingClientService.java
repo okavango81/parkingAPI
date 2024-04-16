@@ -13,6 +13,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class ParkingClientService {
@@ -25,6 +27,12 @@ public class ParkingClientService {
         ParkingClient c = parkingClientRepository.save(new ParkingClient(clientDTO.getName(), clientDTO.getCpf())) ;
         ParkingClientMinDTO client = new ParkingClientMinDTO(c);
         return ResponseEntity.status(HttpStatus.CREATED).body(client);
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<ParkingClientMinDTO> findId(Long id){
+        Optional<ParkingClient> c = parkingClientRepository.findById(id);
+        return ResponseEntity.ok().body(new ParkingClientMinDTO(c.get()));
     }
 
 }
