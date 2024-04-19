@@ -39,7 +39,7 @@ public class SwaggerParkingUser {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
-    @Operation(summary = "Remove by id", description = "Remove parking user by id",
+    @Operation(summary = "Remove by id", description = "Remove parking user by id (Operation permited only to ADMIN profile authenticated)",
             responses = {
                     @ApiResponse(responseCode = "204", description = "Parking user successfully removed"),
                     @ApiResponse(responseCode = "404", description = "Resource not found",
@@ -52,10 +52,13 @@ public class SwaggerParkingUser {
 
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
-    @Operation(summary = "Return All", description = "Return all parking users",
+    @Operation(summary = "Return All", description = "Return all parking users (Operation permited only to ADMIN profile authenticated)",
             security = @SecurityRequirement(name = "security"),
             responses = {
-                    @ApiResponse(responseCode = "401", description = "User unauthorized"),
+                    @ApiResponse(responseCode = "401", description = "User unauthorized",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema())
+                    ),
                     @ApiResponse(responseCode = "200", description = "Return of all registered parking users",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ParkingUserMinDTO.class))
@@ -99,7 +102,10 @@ public class SwaggerParkingUser {
     @Operation(summary = "Return by id", description = "Return parking user by id",
             security = @SecurityRequirement(name = "security"),
             responses = {
-                    @ApiResponse(responseCode = "401", description = "User unauthorized"),
+                    @ApiResponse(responseCode = "401", description = "User unauthorized",
+                            content = @Content(mediaType = "application/json",
+                                    schema = @Schema())
+                    ),
                     @ApiResponse(responseCode = "200", description = "Return of parking users defined by id",
                             content = @Content(mediaType = "application/json",
                                     schema = @Schema(implementation = ParkingUserMinDTO.class))

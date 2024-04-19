@@ -3,17 +3,16 @@ package com.okavango.parkingapi.services;
 import com.okavango.parkingapi.domains.ParkingClient;
 import com.okavango.parkingapi.domains.dtos.ParkingClientDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingClientMinDTO;
-import com.okavango.parkingapi.jwt.JWTUserDetail;
 import com.okavango.parkingapi.repositories.ParkingClientRepository;
-import com.okavango.parkingapi.repositories.ParkingUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -33,6 +32,11 @@ public class ParkingClientService {
     public ResponseEntity<ParkingClientMinDTO> findId(Long id){
         Optional<ParkingClient> c = parkingClientRepository.findById(id);
         return ResponseEntity.ok().body(new ParkingClientMinDTO(c.get()));
+    }
+
+    @Transactional(readOnly = true)
+    public ResponseEntity<List<ParkingClientMinDTO>> allClients(){
+        return ResponseEntity.ok().body(parkingClientRepository.findAll().stream().map(ParkingClientMinDTO::new).collect(Collectors.toList()));
     }
 
 }

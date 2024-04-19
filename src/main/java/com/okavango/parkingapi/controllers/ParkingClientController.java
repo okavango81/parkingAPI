@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Tag(name = "ParkingClients", description = "Operations related to the ParkingClient entity")
 @RestController
 @RequiredArgsConstructor
@@ -32,5 +34,12 @@ public class ParkingClientController {
     @SwaggerParkingClient.ClientById
     public ResponseEntity<ParkingClientMinDTO> findById(@PathVariable Long id){
         return parkingClientService.findId(id);
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @SwaggerParkingClient.ReturnAllClients
+    public ResponseEntity<List<ParkingClientMinDTO>> returnAll(){
+        return parkingClientService.allClients();
     }
 }
