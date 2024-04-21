@@ -5,6 +5,7 @@ import com.okavango.parkingapi.domains.dtos.ParkingClientDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingClientMinDTO;
 import com.okavango.parkingapi.domains.projection.PaginatedResponse;
 import com.okavango.parkingapi.repositories.ParkingClientRepository;
+import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

@@ -4,6 +4,8 @@ import com.okavango.parkingapi.domains.dtos.ParkingClientMinDTO;
 import com.okavango.parkingapi.domains.projection.PaginatedResponse;
 import com.okavango.parkingapi.exceptions.ExceptionObject;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -40,6 +42,18 @@ public class SwaggerParkingClient {
     @Target(ElementType.METHOD)
     @Operation(summary = "Return All", description = "Return all parking clients (Operation permited only to ADMIN profile authenticated)",
             security = @SecurityRequirement(name = "security"),
+            parameters = {
+                    @Parameter(in = ParameterIn.QUERY, name = "page",
+                            content = @Content(schema = @Schema(type = "integer", defaultValue = "0")),
+                            description = "Represent the response page"
+
+                    ),
+                    @Parameter(in = ParameterIn.QUERY, name = "size",
+                            content = @Content(schema = @Schema(type = "integer", defaultValue = "12")),
+                            description = "Represents the total number of elements per page"
+
+                   )
+            },
             responses = {
                     @ApiResponse(responseCode = "401", description = "User unauthorized",
                             content = @Content(mediaType = "application/json",

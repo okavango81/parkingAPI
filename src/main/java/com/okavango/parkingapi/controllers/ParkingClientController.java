@@ -6,6 +6,7 @@ import com.okavango.parkingapi.domains.dtos.ParkingClientDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingClientMinDTO;
 import com.okavango.parkingapi.domains.projection.PaginatedResponse;
 import com.okavango.parkingapi.services.ParkingClientService;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +42,7 @@ public class ParkingClientController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     @SwaggerParkingClient.ReturnAllClients
-    public ResponseEntity<PaginatedResponse<ParkingClientMinDTO>> returnAll(@PageableDefault(size = 12) Pageable pageable){
+    public ResponseEntity<PaginatedResponse<ParkingClientMinDTO>> returnAll(@Parameter(hidden = true) @PageableDefault(size = 12) Pageable pageable){
         return parkingClientService.allClients(pageable);
     }
 }
