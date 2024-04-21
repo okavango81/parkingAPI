@@ -1,13 +1,13 @@
 package com.okavango.parkingapi.docs.parking_user;
 
 import com.okavango.parkingapi.domains.dtos.ParkingClientMinDTO;
+import com.okavango.parkingapi.domains.projection.PaginatedResponse;
 import com.okavango.parkingapi.exceptions.ExceptionObject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.apache.coyote.Response;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -47,7 +47,7 @@ public class SwaggerParkingClient {
                     ),
                     @ApiResponse(responseCode = "200", description = "Return of all registered parking clients",
                             content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = ParkingClientMinDTO.class))
+                                    schema = @Schema(implementation = PaginatedResponse.class))
                     ),
                     @ApiResponse(responseCode = "403", description = "User have be not permission to access this resource",
                             content = @Content(mediaType = "application/json",

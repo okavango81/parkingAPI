@@ -7,7 +7,6 @@ import com.okavango.parkingapi.domains.projection.PaginatedResponse;
 import com.okavango.parkingapi.repositories.ParkingClientRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,8 +40,6 @@ public class ParkingClientService {
     @Transactional
     public ResponseEntity<PaginatedResponse<ParkingClientMinDTO>> allClients(Pageable page) {
 
-        //definir total de elementos por pagina (variavel pageable no metodo findAll)
-        Pageable pageable = PageRequest.of(page.getPageNumber(), 12);
         Page<ParkingClient> clientsPage = parkingClientRepository.findAll(page);
         List<ParkingClientMinDTO> clientDTOs = clientsPage.getContent().stream().map(ParkingClientMinDTO::new).collect(Collectors.toList());
         PaginatedResponse<ParkingClientMinDTO> response = new PaginatedResponse<>();
