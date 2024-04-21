@@ -3,8 +3,12 @@ package com.okavango.parkingapi.services;
 import com.okavango.parkingapi.domains.ParkingClient;
 import com.okavango.parkingapi.domains.dtos.ParkingClientDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingClientMinDTO;
+import com.okavango.parkingapi.domains.projection.PaginatedResponse;
 import com.okavango.parkingapi.repositories.ParkingClientRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -22,21 +26,38 @@ public class ParkingClientService {
     private final ParkingUserService parkingUserService;
 
     @Transactional
-    public ResponseEntity<ParkingClientMinDTO> registration(ParkingClientDTO clientDTO){
-        ParkingClient c = parkingClientRepository.save(new ParkingClient(clientDTO.getName(), clientDTO.getCpf())) ;
+    public ResponseEntity<ParkingClientMinDTO> registration(ParkingClientDTO clientDTO) {
+        ParkingClient c = parkingClientRepository.save(new ParkingClient(clientDTO.getName(), clientDTO.getCpf()));
         ParkingClientMinDTO client = new ParkingClientMinDTO(c);
         return ResponseEntity.status(HttpStatus.CREATED).body(client);
     }
 
     @Transactional(readOnly = true)
-    public ResponseEntity<ParkingClientMinDTO> findId(Long id){
+    public ResponseEntity<ParkingClientMinDTO> findId(Long id) {
         Optional<ParkingClient> c = parkingClientRepository.findById(id);
         return ResponseEntity.ok().body(new ParkingClientMinDTO(c.get()));
     }
 
-    @Transactional(readOnly = true)
-    public ResponseEntity<List<ParkingClientMinDTO>> allClients(){
-        return ResponseEntity.ok().body(parkingClientRepository.findAll().stream().map(ParkingClientMinDTO::new).collect(Collectors.toList()));
+    @Transactional
+    public ResponseEntity<PaginatedResponse<ParkingClientMinDTO>> allClients(Pageable page) {
+
+        //definir total de elementos por pagina (variavel pageable no metodo findAll)
+        Pageable pageable = PageRequest.of(page.getPageNumber(), 12);
+        Page<ParkingClient> clientsPage = parkingClientRepository.findAll(page);
+        List<ParkingClientMinDTO> clientDTOs = clientsPage.getContent().stream().map(ParkingClientMinDTO::new).collect(Collectors.toList());
+        PaginatedResponse<ParkingClientMinDTO> response = new PaginatedResponse<>();
+
+        response.setContent(clientDTOs);
+        response.setFirst(clientsPage.isFirst());
+        response.setLast(clientsPage.isLast());
+        response.setNumber(clientsPage.getNumber());
+        response.setSize(clientsPage.getSize());
+        response.setNumberOfElements(clientsPage.getNumberOfElements());
+        response.setTotalPages(clientsPage.getTotalPages());
+        response.setTotalElements(clientsPage.getTotalElements());
+
+        return ResponseEntity.ok().body(response);
     }
+
 
 }

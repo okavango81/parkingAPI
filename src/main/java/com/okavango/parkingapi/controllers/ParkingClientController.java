@@ -4,15 +4,15 @@ package com.okavango.parkingapi.controllers;
 import com.okavango.parkingapi.docs.parking_user.SwaggerParkingClient;
 import com.okavango.parkingapi.domains.dtos.ParkingClientDTO;
 import com.okavango.parkingapi.domains.dtos.ParkingClientMinDTO;
+import com.okavango.parkingapi.domains.projection.PaginatedResponse;
 import com.okavango.parkingapi.services.ParkingClientService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @Tag(name = "ParkingClients", description = "Operations related to the ParkingClient entity")
 @RestController
@@ -36,10 +36,11 @@ public class ParkingClientController {
         return parkingClientService.findId(id);
     }
 
+
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     @SwaggerParkingClient.ReturnAllClients
-    public ResponseEntity<List<ParkingClientMinDTO>> returnAll(){
-        return parkingClientService.allClients();
+    public ResponseEntity<PaginatedResponse<ParkingClientMinDTO>> returnAll(Pageable pageable){
+        return parkingClientService.allClients(pageable);
     }
 }

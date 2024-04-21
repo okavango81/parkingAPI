@@ -7,7 +7,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
@@ -25,14 +24,14 @@ public class JWTUtils {
     public static final String SECRET_KEY = "0123456789-0123456789-0123456789";
 
     // tempo de expiracao do token
-    public static final Long EXPIRE_DAYS = 0L;
+    public static final Long EXPIRE_DAYS = 1L;
     public static final Long EXPIRE_HOURS = 0L;
-    public static final Long EXPIRE_MINUTES = 10L;
+    public static final Long EXPIRE_MINUTES = 0L;
 
     private JWTUtils() {
     }
 
-    // criptografia da chave quando da geracao do token
+    // criptografia da chave quando faz a geracao do token
     private static javax.crypto.SecretKey generateKey() {
         return Keys.hmacShaKeyFor(SECRET_KEY.getBytes(StandardCharsets.UTF_8));
     }
