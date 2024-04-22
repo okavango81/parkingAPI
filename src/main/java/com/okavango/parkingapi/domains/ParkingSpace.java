@@ -45,7 +45,17 @@ public class ParkingSpace {
     @LastModifiedBy
     private String modifiedBy;
 
-    private enum VacancyStatus{
+    public ParkingSpace(String code, String status) {
+        this.code = code;
+
+        if ("f".equalsIgnoreCase(status)) {
+           vacancyStatus = VacancyStatus.FREE;
+        } else if ("o".equalsIgnoreCase(status)) {
+            vacancyStatus = VacancyStatus.OCCUPIED;
+        }
+    }
+
+    private enum VacancyStatus {
         FREE, OCCUPIED
     }
 

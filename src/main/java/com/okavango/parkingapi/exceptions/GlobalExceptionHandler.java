@@ -23,7 +23,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(DataIntegrityViolationException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ExceptionObject handlerDataIntegrityViolationException(DataIntegrityViolationException ex, HttpServletRequest request) {
-        String message = "This username/cpf is already registered in the database";
+        String message = "This registry is already registered in the database";
         return new ExceptionObject(request, LocalDateTime.now(), HttpStatus.CONFLICT.value(), message);
     }
 
