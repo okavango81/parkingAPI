@@ -40,6 +40,7 @@ public class SwaggerParkingUser {
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.METHOD)
     @Operation(summary = "Remove by id", description = "Remove parking user by id (Operation permited only to ADMIN profile authenticated)",
+            security = @SecurityRequirement(name = "security"),
             responses = {
                     @ApiResponse(responseCode = "204", description = "Parking user successfully removed"),
                     @ApiResponse(responseCode = "404", description = "Resource not found",
